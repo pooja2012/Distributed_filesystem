@@ -1,15 +1,36 @@
-import web
+import socket, pickle
+from threading import Thread
+import threading
+import os
 
-urls = (
-    '/(.*)', 'index'
-)
+def get_list(name,sock):
+    current_working_directory = os.getcwd()
+    os.chdir(current_working_directory)
+    files =[]
+    d1=[]
+    files = os.listdir(current_working_directory)
+    f_name = sock.recv(2048)        
+    if f_name in files:
+        i=files.index(f_name)
+        data = current_working_directory+f_name+' Size '+str(os.path.getsize(files[i]))+' Bytes  Last modified ' +str(os.path.getctime(files[i]))      
+    else:
+        data = 'File does not exist'
+    data1 = data.encode()
+    sock.send(data1)
+    
 
-class index:
-    def GET(self):
-         filename=self.recv()
 
-        return "Hello, world!"
-
-if __name__ == "__main__":
-    app = web.application(urls, globals())
-    app.run()
+def Main():
+    host = '127.0.0.1'
+    port = 5000
+    s = socket.socket()
+    s.bind(('',port))
+    s.listen(5)
+    print('server started')
+    while(True):
+        c,addr = s.accept()
+        print('client connected ip:'+str(addr))
+        t= threading.Thread(target= get_list('get_list',c))
+        t.start()
+if __name__ == '__main__':
+    Main()
