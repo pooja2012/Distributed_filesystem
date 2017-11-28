@@ -26,7 +26,53 @@ def directory():
         print data1
     socket_dir.close()
 
+def fileserver(f):
+    
+    status = lock(f)
+    mode = ['r', 'a']
+    if status == 'locked':
+        q = raw_input ('File is locked for writing, only read mode avaliable. Type yes to continue or exit to quit ')
+        if q == 'yes':
+            x='r'
+            if x == mode[0] :
+                g = [f, mode[0]]
+                socket_file.send(str(g))
+                with open('received_file', 'wb') as f1:
+                    print 'file opened'
+                    while True:
+                        print('receiving data...')
+                        data = socket_file.recv(1024)
+                        print data
+                        if not data:
+                            break
+            
+        f1.close()
+    else:
+        x= raw_input('File unlocked, read and write avaliable. Type r to read and a to append ')
+        if(x == mode[1]):
+            g = [f, mode[1]]
+            socket_lock.send((str(g[0])).encode())            
+            socket_file.send(str(g))
+            data1 = raw_input("What do you want to write to file  " + str(g[0]))
+            print "Modified content: " + str(data1)
+            socket_file.send(data1)
+            print "Changes sent!"
+            socket_lock.send('done'.encode())
+        else:
+            g = [f, mode[0]]
+            socket_file.send(str(g))
+            with open('received_file', 'wb') as f1:
+                print 'file opened'
+                while True:
+                    
+                    print('receiving data...')
+                    data = socket_file.recv(1024)
+                    print data
+                    if not data:                        
+                        break
+            
 
+                        # Close the socket when done
 
 
 if __name__ == '__main__':
