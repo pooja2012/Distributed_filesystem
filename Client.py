@@ -70,17 +70,32 @@ def fileserver(f):
                     print data
                     if not data:                        
                         break
-            
+                        
+                           
 
                         # Close the socket when done
+def lock(file_name):    
+    socket_lock.send(file_name.encode())
+    status = socket_lock.recv(1024)
+    print ('Status of file is : ' +str(status.decode()))
+    return status
+
 
 
 if __name__ == '__main__':
    
     host = 'localhost'
-    port_dir = 5000
+    port_dir = 5001
     socket_dir = socket.socket()
     socket_dir.connect((host, port_dir))
+    
+    socket_file = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
+    port_file = 5003              
+    socket_file.connect((host, port_file))
+
+    port_lock = 6002
+    socket_lock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket_lock.connect((host, port_lock))
     
     
     directory()
