@@ -3,12 +3,34 @@ from threading import Thread
 import threading
 import os
 
+
+class client_thread(Thread):
+
+       def __init__(self,addr,c):
+              Thread.__init__(self)
+              self.addr = addr
+              self.c = c
+
+       def run(self):
+              while True:
+                     get_list(self.addr,self.c)
+              
+
 def get_list(name,sock):
+    f_name = (sock.recv(2048)).decode()
+    info = (sock.recv(2048)).decode()
+    f = open(f_name,"w+")
+    f.write(info)
+    print('done')
+    f.close()
+    
     current_working_directory = os.getcwd()
     os.chdir(current_working_directory)
     files =[]
     d1=[]
     files = os.listdir(current_working_directory)
+    data=pickle.dumps(files)
+    sock.send(data)
     f_name = sock.recv(2048)        
     if f_name in files:
         i=files.index(f_name)
@@ -18,19 +40,22 @@ def get_list(name,sock):
     data1 = data.encode()
     sock.send(data1)
     
-
-
 def Main():
     host = '127.0.0.1'
-    port = 5000
-    s = socket.socket()
+    port = 5001
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     s.bind(('',port))
     s.listen(5)
+
+    
     print('server started')
     while(True):
-        c,addr = s.accept()
+        (c,addr) = s.accept()
         print('client connected ip:'+str(addr))
-        t= threading.Thread(target= get_list('get_list',c))
-        t.start()
+        Thread = client_thread(addr,c)
+        Thread.start()
+
+        
 if __name__ == '__main__':
+    
     Main()
