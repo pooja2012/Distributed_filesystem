@@ -5,7 +5,7 @@ print ("Opened database successfully");
 
 print('1')
 cur = conn.cursor()
-cur.execute("SELECT * FROM FILES")
+cur.execute("SELECT * FROM file_list")
  
 rows = cur.fetchall()
 print('2') 
