@@ -57,11 +57,7 @@ def auth_server(name,c):
        else:
               val = 'exit'
        c.send(val.encode())
-    
-
-
-
-
+ 
 
 def Main():
     host = '127.0.0.1'
