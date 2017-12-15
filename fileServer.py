@@ -29,12 +29,14 @@ def file_server(name,c):
        h = remove.split(", ")
        h1 = h[0].replace("'", "")
        f1 = h[1]
-
+#To read a given file
        if f1 == "'r'":
               print "Read"
+              #To open a file
               f = open(h1)
               l = f.read(1024)
               while (l):
+                     #Send the file after read
                      c.send(l)
                      print('Sent ',repr(l))
                      l = f.read(1024)
@@ -50,7 +52,7 @@ def file_server(name,c):
 
        else:
               print "Failed to Read"
-                           # Close the connection
+  # Close the connection if failed
 
 
 def Main():
