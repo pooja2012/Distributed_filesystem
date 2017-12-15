@@ -100,18 +100,13 @@ def fileserver(f):
                     if not data:                        
                         break
         directory()    
-        f1.close()    
-
-                        
+        f1.close()                         
 
 def lock(file_name):    
     socket_lock.send(file_name.encode())
     status = socket_lock.recv(1024)
     print ('Status of file is : ' +str(status.decode()))
     return status
-
-
-
 
 if __name__ == '__main__':
    
