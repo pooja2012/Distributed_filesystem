@@ -7,9 +7,6 @@ import threading
 from threading import Thread
 import sqlite3
 
-
-
-
 class client_thread(Thread):
 
        def __init__(self,addr,c):
@@ -21,7 +18,7 @@ class client_thread(Thread):
               while True:
                      lock(self.addr,self.c)
               
-
+#Connect to the database
 def lock(name,c):
     conn = sqlite3.connect('test.db')
     print "Opened database successfully";
@@ -30,6 +27,7 @@ def lock(name,c):
     file_name = c.recv(1024)
     print(file_name)
     print('1')
+# to select the filename requested by the client from the fileslist in the database.
     cursor = conn.execute("SELECT file_name, status from files_list")
     i=0
     for row in cursor:       
@@ -40,15 +38,16 @@ def lock(name,c):
     if i==0:
            d_f = file_name
            d_s = 'unlocked'
+       #To insert the file name and status into the database if a new file is created by the client.
            cursor = conn.execute("INSERT INTO files_list VALUES (?, ?)", (d_f, d_s))
            conn.commit()
     else:
-           print 'file exists'
+           print 'file exists' # if file exists,file to be retrived and presented to the client.
            cursor = conn.execute("SELECT status from files_list WHERE file_name = (?)", (file_name,))
            for row in cursor:                  
                   d_s = row[0]
     c.send(d_s.encode())
-
+#If the file is in write mode then the status of the file to be updated to locked else unlocked.
     f_name = c.recv(1024)
     cursor = conn.execute("UPDATE files_list SET status = 'locked' WHERE file_name = (?)",(f_name,))
     conn.commit()
@@ -58,11 +57,6 @@ def lock(name,c):
            cursor = conn.execute("UPDATE files_list SET status = 'unlocked' WHERE file_name = (?)",(f_name,))
            conn.commit()
            
-    
-    
-    
-        
-
 def Main():
     host = '127.0.0.1'
     port = 6002
