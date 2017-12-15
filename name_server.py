@@ -49,8 +49,6 @@ def get_list(name,sock):
            data = 'program terminated'
     sock.send(data)
     
-
-
 def Main():
     host = '127.0.0.1'
     port = 5001
@@ -58,7 +56,7 @@ def Main():
     s.bind(('',port))
     s.listen(5)
 
-    
+   
     print('server started')
     while(True):
         (c,addr) = s.accept()
