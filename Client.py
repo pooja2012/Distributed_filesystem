@@ -1,5 +1,5 @@
 import socket, pickle       
-
+# authentication function
 def authentication():
     input1 = raw_input("Enter 1 to Login, 2 to Signup, 3 to Exit ")
     socket_authen.send(input1.encode())
@@ -19,7 +19,7 @@ def authentication():
         authentication()
     else:
         print'Program Terminated'
-
+#directory fucntion
 def directory():    
     inp = raw_input('Type @ to create a new file, and # to access existing file, $ to exit ')
     socket_dir.send(inp.encode())
@@ -53,9 +53,9 @@ def directory():
         print'Application Terminated'
     elif file_name1 == 'B':
         directory()
-
+# file server function
 def fileserver(f):
-    
+  
     status = lock(f)
     mode = ['r', 'a']
     if status == 'locked':
@@ -101,7 +101,7 @@ def fileserver(f):
                         break
         directory()    
         f1.close()                         
-
+#Lock server
 def lock(file_name):    
     socket_lock.send(file_name.encode())
     status = socket_lock.recv(1024)
