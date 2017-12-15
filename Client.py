@@ -1,30 +1,30 @@
 import socket, pickle       
 
 def authentication():
-    input1 = raw_input("Enter 1 to login, 2 to sign up, 3 to exit: ")
+    input1 = raw_input("Enter 1 to Login, 2 to Signup, 3 to Exit ")
     socket_authen.send(input1.encode())
-    username = raw_input("Enter username: ")
+    username = raw_input("Enter User Name : ")
     socket_authen.send(username.encode())
-    password = raw_input("Enter password: ")
+    password = raw_input("Enter Password : ")
     socket_authen.send(password.encode())
     print(username, password, input1)
     val = (socket_authen.recv(1024)).decode()
     if val == 'true':
         directory()
     elif val == 'false':
-        print 'Incorrect password'
+        print 'Incorrect Password!, Please try again'
         authentication()
     elif val == 'exists':
         print 'Username already exists'
         authentication()
     else:
-        print'Program terminated'
+        print'Program Terminated'
 
 def directory():    
-    inp = raw_input('Type 1 to create a new file, and 2 to access existing file, 3 to exit ')
+    inp = raw_input('Type @ to create a new file, and # to access existing file, $ to exit ')
     socket_dir.send(inp.encode())
-    if inp == '1':
-        f_name = raw_input('enter file name ')
+    if inp == '@':
+        f_name = raw_input('Enter File Name ')
         socket_dir.send(f_name.encode())
         info = raw_input('Write data into file: ')        
         socket_dir.send(info.encode())
@@ -32,7 +32,7 @@ def directory():
         files = pickle.loads(data)
         print files
         directory()
-    elif inp == '2':
+    elif inp == '#':
         print 'Files in the server: '
         f_list = socket_dir.recv(2048)
         f_names = pickle.loads(f_list)
@@ -42,16 +42,16 @@ def directory():
         data = socket_dir.recv(2048)
         data1 = data.decode()
         print data1
-    file_name1 = raw_input("Type open to access file and exit to quit or back to open another file ")
-    if file_name1 == 'open':
+    file_name1 = raw_input("Enter A to access file and Q to quit or B to open another file ")
+    if file_name1 == 'A':
         data2 = 'exit'
         #socket_dir.send(data2.encode())
         fileserver(file_name)
-    elif file_name1 == 'exit':
+    elif file_name1 == 'Q':
         file_name1.encode()
         socket_dir.send(file_name1.encode())
         print'Application Terminated'
-    elif file_name1 == 'back':
+    elif file_name1 == 'B':
         directory()
 
 def fileserver(f):
