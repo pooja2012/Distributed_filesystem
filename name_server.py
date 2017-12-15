@@ -14,8 +14,7 @@ class client_thread(Thread):
        def run(self):
               while True:
                      get_list(self.addr,self.c)
-              
-
+# to get the list of the files              
 def get_list(name,sock):
     
     inp = (sock.recv(2048)).decode()
@@ -34,7 +33,7 @@ def get_list(name,sock):
     d1=[]
     files = os.listdir(current_working_directory)
     data=pickle.dumps(files)
-    
+ #To retrieve the size of the file and last modified time
     if inp == '2':
            sock.send(data)
            f_name = sock.recv(2048)
