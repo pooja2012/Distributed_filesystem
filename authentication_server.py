@@ -17,7 +17,8 @@ class client_thread(Thread):
               while True:
                      auth_server(self.addr,self.c)
 
-
+#To check if there is any mismatch in th username and password for the exisitng user and throw the error .
+#To create an entry on the database if any new user signs up
 def auth_server(name,c):
        inp = c.recv(2048)
        print 'started'
